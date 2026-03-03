@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var conn = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+var conn = Environment.GetEnvironmentVariable("DATABASE_URL");
 Console.WriteLine("CONN: " + conn);
 
 builder.Services.AddControllersWithViews();
@@ -13,7 +13,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
-// 👇 ضيف ده
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
