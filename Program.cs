@@ -3,15 +3,27 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var conn = Environment.GetEnvironmentVariable("DATABASE_URL");
-Console.WriteLine("CONN: " + conn);
+var rawUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+Console.WriteLine("RAW URL: " + rawUrl);
+
+var uri = new Uri(rawUrl);
+
+var userInfo = uri.UserInfo.Split(':');
+
+var conn =
+    $"Host={uri.Host};" +
+    $"Port={uri.Port};" +
+    $"Database={uri.AbsolutePath.TrimStart('/')};" +
+    $"Username={userInfo[0]};" +
+    $"Password={userInfo[1]};" +
+    $"SSL Mode=Require;Trust Server Certificate=true;";
+
+Console.WriteLine("FORMATTED: " + conn);
 
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(conn));
-
-var app = builder.Build();
+    options.UseNpgsql(conn)); var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
