@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var conn = builder.Configuration.GetConnectionString("DefaultConnection");
+var conn = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 Console.WriteLine("CONN: " + conn);
 
 builder.Services.AddControllersWithViews();
