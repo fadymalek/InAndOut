@@ -3,6 +3,7 @@ using InAndOut.Models;
 using InAndOut.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace InAndOut.Controllers
 {
@@ -18,15 +19,11 @@ namespace InAndOut.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Expense> objList = _db.Expenses;
+            var objList = _db.Expenses
+           .Include(e => e.ExpenseType)
+           .ToList();
 
-            foreach (var obj in objList)
-            {
-                obj.ExpenseType =  _db.ExpenseTypes.FirstOrDefault(u => u.Id == obj.ExpenseTypeId);
-            }
-
-
-            return View(objList);
+                return View(objList);
 
         }
 
